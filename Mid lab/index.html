@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ralph Lauren | Pakistan</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+
+<!-- jQuery (needed for AJAX) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="script.js" defer></script>
+
+</head>
+
+
+<body>
+
+
+
+<!-- TOP BAR -->
+<div class="topbar">Free Standard Delivery. <a href="#">Details</a></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+
+  <!-- Desktop horizontal links -->
+  <div class="nav-links" id="nav-links">
+    <a href="#">MEN</a>
+    <a href="#">WOMEN</a>
+    <a href="#">KIDS &amp; BABY</a>
+    <a href="#">HOME</a>
+    <a href="#">DISCOVER</a>
+  </div>
+
+  <!-- Always-visible centred logo -->
+  <div class="nav-logo">RALPH LAUREN</div>
+
+  <!-- Right side: icons + hamburger button -->
+  <div class="nav-right">
+    <div class="nav-icons">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span class="icon">
+        <i class="fa-regular fa-heart outline"></i>
+        <i class="fa-solid fa-heart filled"></i>
+      </span>
+      <span class="icon">
+        <i class="fa-regular fa-user outline"></i>
+        <i class="fa-solid fa-user filled"></i>
+      </span>
+      <i class="fa-solid fa-bag-shopping"></i>
+    </div>
+
+    <!-- Hamburger (CSS hides this on desktop, shows on mobile) -->
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      <span class="ham-bar"></span>
+      <span class="ham-bar"></span>
+      <span class="ham-bar"></span>
+    </button>
+  </div>
+
+</nav>
+
+<!-- Mobile dropdown panel (sits just below nav) -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <a href="#" class="mobile-link">MEN</a>
+  <a href="#" class="mobile-link">WOMEN</a>
+  <a href="#" class="mobile-link">KIDS &amp; BABY</a>
+  <a href="#" class="mobile-link">HOME</a>
+  <a href="#" class="mobile-link">DISCOVER</a>
+</div>
+
+
+<!-- HERO -->
+<section class="hero">
+  <video id="video1" autoplay muted playsinline loop class="hero-video">
+    <source src="/videos/HP_VIDEO_1440x900_DSK_LOGO.webm" type="video/webm">
+  </video>
+  <div class="hero-text">
+    <a href="#">SHOP NOW</a>
+  </div>
+</section>
+
+
+<!-- TWO-COL: World of Polo + Spring 2026 -->
+<section class="two-col">
+  <div class="img-wrap" style="background:#8a9aaa;">
+    <img src="/images/worldOfPolo.avif" alt="World of Polo" />
+    <div class="overlay">
+      <p class="brand">POLO RALPH LAUREN</p>
+      <h2>The World of Polo</h2>
+      <p>Iconic styles charged with energy for<br>Men, Women, Boys, and Girls</p>
+      <div class="btns"><a href="#" class="btn">SHOP NOW</a></div>
+    </div>
+  </div>
+  <div class="img-wrap" style="background:#c2b8ae;">
+    <img src="/images/Spring2026.avif" alt="Spring 2026" />
+    <div class="overlay dark">
+      <p class="brand">RALPH LAUREN</p>
+      <h2>Spring 2026</h2>
+      <p>Subtle refinements speak to a world of<br>casual sophistication</p>
+      <div class="btns">
+        <a href="#" class="btn">SHOP COLLECTION</a>
+        <a href="#" class="btn">SHOP PURPLE LABEL</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FULL WIDTH: Heritage Icons -->
+<section class="full-width">
+  <div class="img-wrap" style="background:#3d3a36;">
+    <img src="/images/HeritageIcons.avif" alt="Heritage Icons" />
+    <div class="overlay">
+      <p class="brand">POLO RALPH LAUREN</p>
+      <h2>Heritage Icons</h2>
+      <p>Build a timeless wardrobe with rich textures, bold colours, and elegant layering</p>
+      <div class="btns"><a href="#" class="btn">SHOP NOW</a></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TWO-COL: Spring + Special Occasion -->
+<section class="two-col">
+  <div class="img-wrap" style="background:#c0bbb5;">
+    <img src="/images/Spring.avif" alt="Spring" />
+    <div class="overlay">
+      <p class="brand">POLO RALPH LAUREN</p>
+      <h2>Spring</h2>
+      <p>Laid-back layers that loosen into spring</p>
+      <div class="btns"><a href="#" class="btn">SHOP NOW</a></div>
+    </div>
+  </div>
+  <div class="img-wrap" style="background:#b8c0c4;">
+    <img src="/images/SpecialOccasions.avif" alt="Special Occasion" />
+    <div class="overlay">
+      <p class="brand">POLO RALPH LAUREN</p>
+      <h2>Special Occasion</h2>
+      <div class="btns">
+        <a href="#" class="btn">SHOP BOYS</a>
+        <a href="#" class="btn">SHOP GIRLS</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FULL WIDTH: Candy Store -->
+<section class="full-width candy">
+  <div class="img-wrap" style="background:#7a8a7a;">
+    <img src="/images/CandyStore.avif" alt="Candy Store" />
+    <div class="overlay">
+      <p class="brand">POLO RALPH LAUREN</p>
+      <h2>Candy Store</h2>
+      <p>A cheerful collection of colourful styles</p>
+      <div class="candy-links">
+        <a href="#">MEN</a>
+        <a href="#">WOMEN</a>
+        <a href="#">BOYS</a>
+        <a href="#">GIRLS</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WORLD OF LUXURY -->
+<section class="luxury">
+  <div class="luxury-head">
+    <div>
+      <h2>The World of Luxury</h2>
+      <p>Explore seasonal collections, iconic accessories, and more</p>
+    </div>
+    <div class="arrows">
+      <button>&#8249;</button>
+      <button>&#8250;</button>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="img-wrap" style="background:#a0a0a0;">
+        <img src="/images/Luxury1.avif" alt="Spring 2026" />
+        <div class="overlay">
+          <p class="brand">RALPH LAUREN COLLECTION</p>
+          <h2>Spring 2026</h2>
+          <div class="btns"><a href="#" class="btn">SHOP WOMEN</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="img-wrap" style="background:#908878;">
+        <img src="/images/Lux2.avif" alt="Spring 2026" />
+        <div class="overlay">
+          <p class="brand">RALPH LAUREN PURPLE LABEL</p>
+          <h2>Spring 2026</h2>
+          <div class="btns"><a href="#" class="btn">SHOP MEN</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="img-wrap" style="background:#c8c0b0;">
+        <img src="/images/HomeAccents.avif" alt="Home Accents" />
+        <div class="overlay">
+          <p class="brand">RALPH LAUREN HOME</p>
+          <h2>Home Accents</h2>
+          <div class="btns"><a href="#" class="btn">SHOP NOW</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="img-wrap" style="background:#b0b8c0;">
+        <img src="/images/Newarrivals.avif" alt="New Arrivals" />
+        <div class="overlay">
+          <p class="brand">RALPH LAUREN</p>
+          <h2>New Arrivals</h2>
+          <div class="btns"><a href="#" class="btn">SHOP NOW</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FEATURED DEALS ════════════════════════════════ -->
+<section class="featured-deals">
+  <div class="featured-head">
+    <div>
+      <h2>Featured Deals</h2>
+      <p>Handpicked offers updated daily &mdash; limited time only</p>
+    </div>
+    <div class="featured-badge">LIVE DEALS</div>
+  </div>
+
+  <div class="deals-grid" id="deals-grid">
+    <div class="deal-skeleton"></div>
+    <div class="deal-skeleton"></div>
+    <div class="deal-skeleton"></div>
+    <div class="deal-skeleton"></div>
+  </div>
+
+  <p class="deals-error" id="deals-error">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    Unable to load deals. Please try again later.
+  </p>
+</section>
+
+<!-- ══ MODAL ════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close" aria-label="Close modal">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="modal-inner">
+      <div class="modal-img-wrap">
+        <img id="modal-img" src="" alt="" />
+      </div>
+      <div class="modal-info">
+        <span class="modal-category" id="modal-category"></span>
+        <h3 class="modal-title" id="modal-title"></h3>
+        <div class="modal-rating" id="modal-rating"></div>
+        <p class="modal-price" id="modal-price"></p>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-actions">
+          <a href="#" class="btn btn-dark">ADD TO BAG</a>
+          <a href="#" class="btn">WISHLIST</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+
+    <div class="footer-col">
+      <h4>ABOUT</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Protecting Our Brands</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Terms of Sale</a></li>
+        <li><a href="#">Imprint</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Manage Cookie Settings</a></li>
+        <li><a href="#">Accessibility Statement</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>ACCOUNT</h4>
+      <ul>
+        <li><a href="#">My Account</a></li>
+        <li><a href="#">Order Centre</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>CUSTOMER SERVICE</h4>
+      <ul>
+        <li><a href="#">Help</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">If an Order Goes To</a></li>
+        <li><a href="#">Spending Guidelines</a></li>
+        <li><a href="#">Sitemap</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col" style="border:none;">
+      <p class="newsletter-text">SIGN UP TO RECEIVE THE LATEST NEWS, SPECIAL OFFERS AND EXCLUSIVE EVENTS RELATING TO RALPH LAUREN PRODUCTS AND SERVICES, BY E-MAIL, OR TARGETED SOCIAL MEDIA ADS. BY SUBMITTING YOU AGREE TO OUR USE OF TRACKING TECHNOLOGIES FOR PERSONALISATION AND ANALYTICS.</p>
+      <div class="newsletter-row">
+        <input type="email" placeholder="ENTER EMAIL ADDRESS" />
+        <button>SUBMIT</button>
+      </div>
+      <p class="newsletter-fine">You may unsubscribe at any time by clicking on the unsubscribe link in each e-mail. For more information, please read Ralph Lauren Europe SRL's <a href="#">Privacy Policy</a>.</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <div class="social">
+      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="#" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.083.099.095.185.07.284l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg></a>
+      <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg></a>
+    </div>
+    <p class="copyright">© COPYRIGHT STOREBERRY - RALPH LAUREN LLC</p>
+  </div>
+</footer>
+
+
+
+</body>
+</html>
