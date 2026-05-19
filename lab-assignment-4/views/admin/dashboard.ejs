@@ -1,0 +1,102 @@
+<%- include('../partials/head') %>
+
+<div style="display: flex; min-height: 100vh; margin-top: -76px;">
+  
+  <!-- Sidebar -->
+  <aside style="width: 220px; background: #041e3a; color: #fff; padding: 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto;">
+    <div style="font-size: 18px; letter-spacing: .12em; font-weight: 500; margin-bottom: 30px; padding-top: 20px;">
+      ADMIN PANEL
+    </div>
+
+    <nav style="display: flex; flex-direction: column; gap: 2px;">
+      <a href="/admin" style="color: #fff; text-decoration: none; padding: 12px 16px; background: #041e3a; border-left: 3px solid #fff; font-size: 13px; letter-spacing: .08em;">
+        Dashboard
+      </a>
+      <a href="/admin/products/new" style="color: #ccc; text-decoration: none; padding: 12px 16px; background: transparent; border-left: 3px solid transparent; font-size: 13px; letter-spacing: .08em; transition: all .2s;">
+        ➕ Add Product
+      </a>
+      <a href="/admin/logout" style="color: #ccc; text-decoration: none; padding: 12px 16px; background: transparent; border-left: 3px solid transparent; font-size: 13px; letter-spacing: .08em; margin-top: 20px;">
+        Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main style="flex: 1; padding: 40px;">
+    <h1 style="font-size: 32px; font-weight: 400; letter-spacing: .1em; margin-bottom: 8px;">Dashboard</h1>
+    <p style="font-size: 13px; color: #777; margin-bottom: 30px;"><%= products.length %> product<%= products.length !== 1 ? 's' : '' %> in store</p>
+
+    <% if (products.length === 0) { %>
+      <p style="text-align: center; padding: 60px 20px; color: #555;">No products yet. <a href="/admin/products/new" style="color: #041e3a; text-decoration: underline;">Add one now</a></p>
+    <% } else { %>
+      <div style="overflow-x: auto; border: 1px solid #e0e0e0;">
+        <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px;">
+          <thead>
+            <tr style="background: #f5f5f5; border-bottom: 1px solid #e0e0e0;">
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; letter-spacing: .05em;">Product Name</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; letter-spacing: .05em;">Price (PKR)</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; letter-spacing: .05em;">Category</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; letter-spacing: .05em;">Rating</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; letter-spacing: .05em;">Stock</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; letter-spacing: .05em;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(product => { %>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td style="padding: 12px 16px;"><%= product.name %></td>
+                <td style="padding: 12px 16px; text-align: center;"><%= product.price.toLocaleString() %></td>
+                <td style="padding: 12px 16px; text-align: center;">
+                  <span style="background: #f0f0f0; padding: 4px 10px; border-radius: 3px; font-size: 11px; font-weight: 500;">
+                    <%= product.category %>
+                  </span>
+                </td>
+                <td style="padding: 12px 16px; text-align: center;"><%= product.rating.toFixed(1) %></td>
+                <td style="padding: 12px 16px; text-align: center;">
+                  <span
+                        <% if (product && product.stock != null && product.stock <= 5) { %>
+                            style="color: #c33;"
+                        <% } %>
+                        >
+                        <strong><%= product && product.stock != null ? product.stock : 'N/A' %></strong>
+                    </span>
+                </td>
+                <td style="padding: 12px 16px; text-align: center; display: flex; gap: 6px; justify-content: center;">
+                  <a href="/admin/products/edit/<%= product._id %>" style="display: inline-block; padding: 6px 12px; background: #041e3a; color: #fff; text-decoration: none; font-size: 11px; letter-spacing: .08em; border-radius: 3px;">
+                    EDIT
+                  </a>
+                  <button onclick="deleteProduct('<%= product._id %>', '<%= product.name %>')" style="padding: 6px 12px; background: #c33; color: #fff; border: none; font-size: 11px; letter-spacing: .08em; border-radius: 3px; cursor: pointer;">
+                    DELETE
+                  </button>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </main>
+</div>
+
+<script>
+function deleteProduct(productId, productName) {
+  if (confirm(`Are you sure you want to delete "${productName}"? This cannot be undone.`)) {
+    fetch(`/admin/products/${productId}`, { method: 'DELETE' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Product deleted successfully');
+          location.reload();
+        } else {
+          alert('Error deleting product');
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Error deleting product');
+      });
+  }
+}
+</script>
+
+<%- include('../partials/footer') %>
