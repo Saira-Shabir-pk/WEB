@@ -1,0 +1,101 @@
+<%- include('../partials/head') %>
+
+<div style="display: flex; min-height: 100vh; margin-top: -76px;">
+  
+  <!-- Sidebar -->
+  <aside style="width: 220px; background: #041e3a; color: #fff; padding: 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto;">
+    <div style="font-size: 18px; letter-spacing: .12em; font-weight: 500; margin-bottom: 30px; padding-top: 20px;">
+      ADMIN PANEL
+    </div>
+
+    <nav style="display: flex; flex-direction: column; gap: 2px;">
+      <a href="/admin" style="color: #ccc; text-decoration: none; padding: 12px 16px; background: transparent; border-left: 3px solid transparent; font-size: 13px; letter-spacing: .08em; transition: all .2s;">
+        Dashboard
+      </a>
+      <a href="/admin/products/new" style="color: #fff; text-decoration: none; padding: 12px 16px; background: #041e3a; border-left: 3px solid #fff; font-size: 13px; letter-spacing: .08em;">
+        ➕ Add Product
+      </a>
+      <a href="/admin/logout" style="color: #ccc; text-decoration: none; padding: 12px 16px; background: transparent; border-left: 3px solid transparent; font-size: 13px; letter-spacing: .08em; margin-top: 20px;">
+        Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main style="flex: 1; padding: 40px; max-width: 700px;">
+    <h1 style="font-size: 32px; font-weight: 400; letter-spacing: .1em; margin-bottom: 28px;">
+      <%= product ? 'Edit Product' : 'Add New Product' %>
+    </h1>
+
+    <% if (typeof error !== 'undefined') { %>
+      <div style="background: #fee; color: #c33; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-size: 13px;">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <form method="POST" action="<%= product ? `/admin/products/${product._id}?_method=PUT` : '/admin/products' %>" enctype="multipart/form-data">
+      <!-- Product Name -->
+      <div>
+        <label style="display: block; font-size: 12px; letter-spacing: .08em; font-weight: 500; margin-bottom: 6px;">Product Name *</label>
+        <input type="text" name="name" value="<%= product ? product.name : '' %>" required style="width: 100%; padding: 10px; border: 1px solid #ccc; font-size: 14px; font-family: Arial, sans-serif; outline: none;" />
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label style="display: block; font-size: 12px; letter-spacing: .08em; font-weight: 500; margin-bottom: 6px;">Price (PKR) *</label>
+        <input type="number" name="price" value="<%= product ? product.price : '' %>" step="0.01" min="0" required style="width: 100%; padding: 10px; border: 1px solid #ccc; font-size: 14px; font-family: Arial, sans-serif; outline: none;" />
+      </div>
+
+      <!-- Category -->
+      <div>
+        <label style="display: block; font-size: 12px; letter-spacing: .08em; font-weight: 500; margin-bottom: 6px;">Category *</label>
+        <select name="category" required style="width: 100%; padding: 10px; border: 1px solid #ccc; font-size: 14px; font-family: Arial, sans-serif; outline: none;">
+          <option value="">Select Category</option>
+          <% validCategories.forEach(cat => { %>
+            <option value="<%= cat %>" <%= product && product.category === cat ? 'selected' : '' %>>
+              <%= cat %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Rating -->
+      <div>
+        <label style="display: block; font-size: 12px; letter-spacing: .08em; font-weight: 500; margin-bottom: 6px;">Rating (0-5) *</label>
+        <input type="number" name="rating" value="<%= product ? product.rating : '' %>" step="0.1" min="0" max="5" required style="width: 100%; padding: 10px; border: 1px solid #ccc; font-size: 14px; font-family: Arial, sans-serif; outline: none;" />
+      </div>
+
+      <!-- Stock -->
+      <div>
+        <label style="display: block; font-size: 12px; letter-spacing: .08em; font-weight: 500; margin-bottom: 6px;">Stock Quantity *</label>
+        <input type="number" name="stock" value="<%= product ? product.stock : '' %>" min="0" required style="width: 100%; padding: 10px; border: 1px solid #ccc; font-size: 14px; font-family: Arial, sans-serif; outline: none;" />
+      </div>
+
+      <!-- Image Upload -->
+      <div>
+        <label style="display: block; font-size: 12px; letter-spacing: .08em; font-weight: 500; margin-bottom: 6px;">Product Image</label>
+        <% if (product && product.image) { %>
+          <div style="margin-bottom: 12px;">
+            <p style="font-size: 12px; color: #666; margin-bottom: 8px;">Current Image:</p>
+            <img src="<%= product.image %>" alt="<%= product.name %>" style="max-width: 150px; height: auto; border: 1px solid #e0e0e0; border-radius: 4px;" />
+          </div>
+        <% } %>
+        <input type="file" name="image" accept="image/*" style="width: 100%; padding: 10px; border: 1px solid #ccc; font-size: 12px; font-family: Arial, sans-serif; outline: none;" />
+        <p style="font-size: 11px; color: #777; margin-top: 4px;">Accepted formats: JPG, PNG, GIF, WebP (Max 5MB)</p>
+      </div>
+
+      <!-- Buttons -->
+      <div style="display: flex; gap: 12px; margin-top: 20px;">
+        <button type="submit" style="flex: 1; height: 40px; background: #041e3a; color: #fff; border: 1px solid #041e3a; font-size: 12px; letter-spacing: .13em; cursor: pointer; transition: background .2s; font-family: Arial, sans-serif;">
+          <%= product ? 'UPDATE PRODUCT' : 'ADD PRODUCT' %>
+        </button>
+        <a href="/admin" style="flex: 1; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; text-decoration: none; color: #111; font-size: 12px; letter-spacing: .13em; transition: all .2s; background: #fff;">
+          CANCEL
+        </a>
+      </div>
+
+    </form>
+  </main>
+</div>
+
+<%- include('../partials/footer') %>

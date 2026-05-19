@@ -1,0 +1,165 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+
+<!-- ══ PAGE HEADER ════════════════════════════════════ -->
+<section class="products-header">
+  <h1>Our Products</h1>
+  <p><%= totalProducts %> item<%= totalProducts !== 1 ? 's' : '' %> found</p>
+</section>
+
+
+<!-- ══ FILTERS ════════════════════════════════════════ -->
+<section class="products-filters">
+  <form method="GET" action="/products" class="filter-form">
+
+    <!-- Search -->
+    <input
+      type="text"
+      name="search"
+      placeholder="Search products…"
+      value="<%= activeFilters.search %>"
+      class="filter-input"
+    />
+
+    <!-- Category -->
+    <select name="category" class="filter-select">
+      <option value="">All Categories</option>
+      <% validCategories.forEach(cat => { %>
+        <option value="<%= cat %>" <%= activeFilters.category === cat ? 'selected' : '' %>>
+          <%= cat %>
+        </option>
+      <% }) %>
+    </select>
+
+    <!-- Min price -->
+    <input
+      type="number"
+      name="min"
+      placeholder="Min price (PKR)"
+      value="<%= activeFilters.min %>"
+      min="0"
+      class="filter-input filter-input--short"
+    />
+
+    <!-- Max price -->
+    <input
+      type="number"
+      name="max"
+      placeholder="Max price (PKR)"
+      value="<%= activeFilters.max %>"
+      min="0"
+      class="filter-input filter-input--short"
+    />
+
+    <!-- Sort -->
+    <select name="sort" class="filter-select">
+      <option value="">Default Sort</option>
+      <option value="price_asc"   <%= activeFilters.sort === 'price_asc'   ? 'selected' : '' %>>Price: Low → High</option>
+      <option value="price_desc"  <%= activeFilters.sort === 'price_desc'  ? 'selected' : '' %>>Price: High → Low</option>
+      <option value="rating_desc" <%= activeFilters.sort === 'rating_desc' ? 'selected' : '' %>>Top Rated</option>
+    </select>
+
+    <button type="submit" class="filter-btn">APPLY</button>
+
+    <!-- Clear all filters -->
+    <a href="/products" class="filter-clear">CLEAR</a>
+
+  </form>
+</section>
+
+
+<!-- ══ PRODUCT GRID ═══════════════════════════════════ -->
+<section class="luxury">
+
+  <% if (products.length === 0) { %>
+
+    <!-- No results state -->
+    <div class="no-products">
+      <p>No products found for your search.</p>
+      <a href="/products" class="btn" style="color:#111; border-color:#111;">VIEW ALL PRODUCTS</a>
+    </div>
+
+  <% } else { %>
+
+    <div class="cards">
+
+      <% products.forEach(product => { %>
+
+        <div class="card">
+          <div class="img-wrap" style="background:#b0b8c1; min-height:300px; display:flex; align-items:flex-end;">
+
+            <!-- Product badge -->
+            <span class="product-badge"><%= product.category %></span>
+
+            <div class="overlay">
+              <p class="brand">RALPH LAUREN</p>
+              <h2><%= product.name %></h2>
+
+              <!-- Price -->
+              <p class="product-price">PKR <%= product.price.toLocaleString() %></p>
+
+              <!-- Rating stars -->
+              <p class="product-rating">
+                <% for(let i = 1; i <= 5; i++) { %>
+                  <% if (i <= Math.floor(product.rating)) { %>★<% } else { %>☆<% } %>
+                <% } %>
+                (<%= product.rating.toFixed(1) %>)
+              </p>
+
+              <!-- Stock -->
+              <p class="product-stock <%= product.stock <= 5 ? 'low-stock' : '' %>">
+                <% if (product.stock === 0) { %>
+                  Out of Stock
+                <% } else if (product.stock <= 5) { %>
+                  Only <%= product.stock %> left!
+                <% } else { %>
+                  In Stock (<%= product.stock %>)
+                <% } %>
+              </p>
+
+              <div class="btns">
+                <a href="#" class="btn">SHOP NOW</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  <% } %>
+
+</section>
+
+
+<!-- ══ PAGINATION ═════════════════════════════════════ -->
+<% if (totalPages > 1) { %>
+<nav class="pagination" aria-label="Page navigation">
+
+  <!-- Previous -->
+  <% if (currentPage > 1) { %>
+    <a href="/products?page=<%= currentPage - 1 %>&search=<%= activeFilters.search %>&category=<%= activeFilters.category %>&min=<%= activeFilters.min %>&max=<%= activeFilters.max %>&sort=<%= activeFilters.sort %>"
+       class="page-btn">&lsaquo; Prev</a>
+  <% } %>
+
+  <!-- Page numbers -->
+  <% pages.forEach(p => { %>
+    <a href="/products?page=<%= p %>&search=<%= activeFilters.search %>&category=<%= activeFilters.category %>&min=<%= activeFilters.min %>&max=<%= activeFilters.max %>&sort=<%= activeFilters.sort %>"
+       class="page-btn <%= p === currentPage ? 'page-btn--active' : '' %>">
+      <%= p %>
+    </a>
+  <% }) %>
+
+  <!-- Next -->
+  <% if (currentPage < totalPages) { %>
+    <a href="/products?page=<%= currentPage + 1 %>&search=<%= activeFilters.search %>&category=<%= activeFilters.category %>&min=<%= activeFilters.min %>&max=<%= activeFilters.max %>&sort=<%= activeFilters.sort %>"
+       class="page-btn">Next &rsaquo;</a>
+  <% } %>
+
+</nav>
+<% } %>
+
+
+<%- include('partials/footer') %>
