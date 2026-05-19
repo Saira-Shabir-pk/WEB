@@ -1,0 +1,183 @@
+<%# views/partials/navbar.ejs %>
+
+<!-- TOP BAR -->
+<div class="topbar">Free Standard Delivery. <a href="#">Details</a></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+
+  <!-- Desktop links -->
+  <div class="nav-links" id="nav-links">
+    <a href="#">MEN</a>
+    <a href="#">WOMEN</a>
+    <a href="#">KIDS &amp; BABY</a>
+    <a href="#">HOME</a>
+    <a href="#">DISCOVER</a>
+  </div>
+
+  <!-- Centred logo -->
+  <div class="nav-logo">RALPH LAUREN</div>
+
+  <!-- Right: icons + hamburger -->
+  <div class="nav-right">
+    <div class="nav-icons">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span class="icon">
+        <i class="fa-regular fa-heart outline"></i>
+        <i class="fa-solid fa-heart filled"></i>
+      </span>
+
+      <!-- ── Dynamic user icon / auth links ───────────────────────── -->
+      <% if (currentUser) { %>
+        <!-- Logged-in user: show dropdown -->
+        <div class="nav-user-dropdown">
+          <button class="nav-user-btn" aria-label="Account menu">
+            <i class="fa-solid fa-user"></i>
+            <span class="nav-user-name"><%= currentUser.name.split(' ')[0] %></span>
+          </button>
+          <div class="nav-user-menu">
+            <div class="nav-user-menu__header">
+              <strong><%= currentUser.name %></strong>
+              <span class="nav-user-role"><%= currentUser.role === 'admin' ? '★ Admin' : 'Customer' %></span>
+            </div>
+            <% if (currentUser.role === 'admin') { %>
+              <a href="/admin" class="nav-user-menu__item">Admin Panel</a>
+            <% } %>
+            <a href="/auth/logout" class="nav-user-menu__item nav-user-menu__item--logout">Sign Out</a>
+          </div>
+        </div>
+      <% } else { %>
+        <!-- Guest: show login/register -->
+        <div class="nav-auth-links">
+          <a href="/auth/login" class="nav-auth-link">Sign In</a>
+          <span class="nav-auth-sep">|</span>
+          <a href="/auth/register" class="nav-auth-link">Register</a>
+        </div>
+      <% } %>
+
+      <i class="fa-solid fa-bag-shopping"></i>
+    </div>
+
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      <span class="ham-bar"></span>
+      <span class="ham-bar"></span>
+      <span class="ham-bar"></span>
+    </button>
+  </div>
+
+</nav>
+
+<!-- Mobile dropdown -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <a href="#" class="mobile-link">MEN</a>
+  <a href="#" class="mobile-link">WOMEN</a>
+  <a href="#" class="mobile-link">KIDS &amp; BABY</a>
+  <a href="#" class="mobile-link">HOME</a>
+  <a href="#" class="mobile-link">DISCOVER</a>
+  <div class="mobile-divider"></div>
+  <% if (currentUser) { %>
+    <% if (currentUser.role === 'admin') { %>
+      <a href="/admin" class="mobile-link">Admin Panel</a>
+    <% } %>
+    <a href="/auth/logout" class="mobile-link">Sign Out</a>
+  <% } else { %>
+    <a href="/auth/login"    class="mobile-link">Sign In</a>
+    <a href="/auth/register" class="mobile-link">Register</a>
+  <% } %>
+</div>
+
+<style>
+/* ── Nav user dropdown ──────────────────────────────────────────────────── */
+.nav-user-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.nav-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: .06em;
+  color: inherit;
+  padding: 4px 0;
+}
+.nav-user-name {
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.nav-user-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px);
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  min-width: 180px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  z-index: 999;
+}
+.nav-user-dropdown:hover .nav-user-menu,
+.nav-user-dropdown:focus-within .nav-user-menu {
+  display: block;
+}
+.nav-user-menu__header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+}
+.nav-user-menu__header strong {
+  display: block;
+  margin-bottom: 3px;
+}
+.nav-user-role {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: .04em;
+}
+.nav-user-menu__item {
+  display: block;
+  padding: 11px 16px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  letter-spacing: .06em;
+  color: #333;
+  text-decoration: none;
+  transition: background .15s;
+}
+.nav-user-menu__item:hover { background: #f5f5f5; }
+.nav-user-menu__item--logout {
+  border-top: 1px solid #f0f0f0;
+  color: #c33;
+}
+
+/* ── Guest auth links ───────────────────────────────────────────────────── */
+.nav-auth-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+.nav-auth-link {
+  color: inherit;
+  text-decoration: none;
+  text-transform: uppercase;
+  opacity: .8;
+  transition: opacity .2s;
+}
+.nav-auth-link:hover { opacity: 1; }
+.nav-auth-sep { opacity: .4; }
+
+/* Mobile divider */
+.mobile-divider {
+  border-top: 1px solid #e0e0e0;
+  margin: 8px 0;
+}
+</style>

@@ -1,0 +1,64 @@
+<%# views/partials/flash.ejs — include this near the top of every page body %>
+
+<% if (typeof flashSuccess !== 'undefined' && flashSuccess.length > 0) { %>
+  <div class="flash flash--success" role="alert">
+    <span class="flash__icon">✓</span>
+    <span><%= flashSuccess[0] %></span>
+    <button class="flash__close" onclick="this.parentElement.remove()" aria-label="Dismiss">×</button>
+  </div>
+<% } %>
+
+<% if (typeof flashError !== 'undefined' && flashError.length > 0) { %>
+  <div class="flash flash--error" role="alert">
+    <span class="flash__icon">!</span>
+    <span><%= flashError[0] %></span>
+    <button class="flash__close" onclick="this.parentElement.remove()" aria-label="Dismiss">×</button>
+  </div>
+<% } %>
+
+<style>
+.flash {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: .04em;
+  border-left: 4px solid;
+  margin: 0;
+  position: relative;
+  animation: flash-in .3s ease;
+}
+@keyframes flash-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.flash--success {
+  background: #f0faf4;
+  border-color: #2d8a4e;
+  color: #1e5c34;
+}
+.flash--error {
+  background: #fff2f2;
+  border-color: #c33;
+  color: #7a1010;
+}
+.flash__icon {
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.flash__close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: inherit;
+  opacity: .6;
+  flex-shrink: 0;
+}
+.flash__close:hover { opacity: 1; }
+</style>
