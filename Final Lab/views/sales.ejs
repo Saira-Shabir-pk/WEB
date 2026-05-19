@@ -1,0 +1,455 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SALES DASHBOARD  —  /sales
+     Initial data is injected server-side; jQuery polls /api/sales-data
+     every 10 seconds to refresh stats without a full page reload.
+═══════════════════════════════════════════════════════════════════════ -->
+
+<style>
+  /* ── Page shell ─────────────────────────────────────────────── */
+  .sd-page {
+    font-family: 'EB Garamond', Georgia, serif;
+    background: #f7f6f4;
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── Hero header ────────────────────────────────────────────── */
+  .sd-header {
+    background: #041e3a;
+    color: #fff;
+    padding: 48px 60px 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .sd-header h1 {
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: .14em;
+    margin: 0;
+  }
+  .sd-header p {
+    margin: 6px 0 0;
+    font-size: 13px;
+    opacity: .65;
+    letter-spacing: .06em;
+  }
+
+  /* ── Live badge ─────────────────────────────────────────────── */
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: .1em;
+    color: #a8d5a2;
+    font-family: Arial, sans-serif;
+  }
+  .live-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #a8d5a2;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .4; transform: scale(.8); }
+  }
+
+  /* ── Metric cards grid ──────────────────────────────────────── */
+  .sd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 36px 60px 0;
+  }
+  .sd-card {
+    background: #fff;
+    border: 1px solid #e4e2de;
+    padding: 28px 24px;
+    position: relative;
+    transition: box-shadow .2s;
+  }
+  .sd-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+  .sd-card-label {
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-family: Arial, sans-serif;
+  }
+  .sd-card-value {
+    font-size: 34px;
+    font-weight: 400;
+    color: #041e3a;
+    line-height: 1;
+    letter-spacing: .02em;
+  }
+  .sd-card-value.updating {
+    opacity: .45;
+    transition: opacity .3s;
+  }
+  .sd-card-sub {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 8px;
+    font-family: Arial, sans-serif;
+  }
+  .sd-card-icon {
+    position: absolute;
+    top: 20px; right: 20px;
+    font-size: 22px;
+    opacity: .12;
+    color: #041e3a;
+  }
+
+  /* ── Top product banner ─────────────────────────────────────── */
+  .sd-top-product {
+    margin: 20px 60px 0;
+    background: #fff;
+    border: 1px solid #e4e2de;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .sd-tp-badge {
+    background: #041e3a;
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: .14em;
+    padding: 6px 14px;
+    white-space: nowrap;
+    font-family: Arial, sans-serif;
+  }
+  .sd-tp-name {
+    font-size: 20px;
+    color: #041e3a;
+    flex: 1;
+  }
+  .sd-tp-meta {
+    font-size: 12px;
+    color: #888;
+    font-family: Arial, sans-serif;
+    text-align: right;
+  }
+
+  /* ── Recent orders table ────────────────────────────────────── */
+  .sd-section {
+    margin: 20px 60px 0;
+  }
+  .sd-section-title {
+    font-size: 13px;
+    letter-spacing: .14em;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-family: Arial, sans-serif;
+  }
+  .sd-table-wrap { overflow-x: auto; border: 1px solid #e4e2de; background: #fff; }
+  .sd-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+  }
+  .sd-table thead tr { background: #f5f4f2; }
+  .sd-table th {
+    padding: 11px 16px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: .06em;
+    font-size: 11px;
+    color: #555;
+    border-bottom: 1px solid #e4e2de;
+  }
+  .sd-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0eeeb;
+    color: #333;
+  }
+  .sd-table tbody tr:last-child td { border-bottom: none; }
+  .sd-badge-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    letter-spacing: .08em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .status-confirmed { background: #e6f4ea; color: #2e7d32; }
+  .status-shipped   { background: #e3f2fd; color: #1565c0; }
+  .status-delivered { background: #f3e5f5; color: #6a1b9a; }
+  .status-pending   { background: #fff8e1; color: #f57f17; }
+  .status-cancelled { background: #fce4ec; color: #c62828; }
+
+  /* ── Empty state ────────────────────────────────────────────── */
+  .sd-empty {
+    text-align: center;
+    padding: 60px 24px;
+    color: #aaa;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+
+  /* ── Last-updated ticker ────────────────────────────────────── */
+  .sd-ticker {
+    margin: 24px 60px 0;
+    font-size: 11px;
+    color: #aaa;
+    font-family: Arial, sans-serif;
+    letter-spacing: .06em;
+  }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 700px) {
+    .sd-header, .sd-grid, .sd-top-product, .sd-section, .sd-ticker {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .sd-top-product { margin-left: 20px; margin-right: 20px; }
+    .sd-section     { margin-left: 20px; margin-right: 20px; }
+    .sd-ticker      { margin-left: 20px; margin-right: 20px; }
+  }
+</style>
+
+<div class="sd-page">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="sd-header">
+    <div>
+      <h1>SALES DASHBOARD</h1>
+      <p>Real-time store performance overview</p>
+    </div>
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      LIVE &mdash; updates every 10 s
+    </div>
+  </div>
+
+  <!-- ── KPI Cards ──────────────────────────────────────────── -->
+  <div class="sd-grid">
+
+    <div class="sd-card">
+      <i class="fa-solid fa-sack-dollar sd-card-icon"></i>
+      <div class="sd-card-label">Total Revenue</div>
+      <div class="sd-card-value" id="stat-revenue">
+        PKR <%= stats.totalRevenue.toLocaleString() %>
+      </div>
+      <div class="sd-card-sub">Cumulative (excl. cancelled)</div>
+    </div>
+
+    <div class="sd-card">
+      <i class="fa-solid fa-cart-shopping sd-card-icon"></i>
+      <div class="sd-card-label">Total Orders</div>
+      <div class="sd-card-value" id="stat-orders">
+        <%= stats.totalOrders.toLocaleString() %>
+      </div>
+      <div class="sd-card-sub">Orders placed to date</div>
+    </div>
+
+    <div class="sd-card">
+      <i class="fa-solid fa-chart-line sd-card-icon"></i>
+      <div class="sd-card-label">Avg. Order Value</div>
+      <div class="sd-card-value" id="stat-aov">
+        PKR <%= stats.avgOrderValue.toLocaleString() %>
+      </div>
+      <div class="sd-card-sub">Revenue ÷ Orders</div>
+    </div>
+
+    <div class="sd-card">
+      <i class="fa-solid fa-boxes-stacked sd-card-icon"></i>
+      <div class="sd-card-label">Products in Catalogue</div>
+      <div class="sd-card-value" id="stat-products">
+        <%= stats.totalProducts.toLocaleString() %>
+      </div>
+      <div class="sd-card-sub">Active listings</div>
+    </div>
+
+  </div>
+
+  <!-- ── Top-Selling Product ────────────────────────────────── -->
+  <div class="sd-top-product" id="top-product-block">
+    <% if (stats.topProduct) { %>
+      <span class="sd-tp-badge">TOP SELLER</span>
+      <div class="sd-tp-name" id="top-product-name"><%= stats.topProduct.name %></div>
+      <div class="sd-tp-meta">
+        <span id="top-product-units"><%= stats.topProduct.unitsSold.toLocaleString() %></span> units sold
+        &nbsp;|&nbsp;
+        PKR <span id="top-product-revenue"><%= stats.topProduct.revenue.toLocaleString() %></span> revenue
+      </div>
+    <% } else { %>
+      <span class="sd-tp-badge">TOP SELLER</span>
+      <div class="sd-tp-name" id="top-product-name" style="color:#aaa;">No sales recorded yet</div>
+      <div class="sd-tp-meta">
+        <span id="top-product-units">0</span> units sold
+        &nbsp;|&nbsp;
+        PKR <span id="top-product-revenue">0</span> revenue
+      </div>
+    <% } %>
+  </div>
+
+  <!-- ── Recent Orders Table ────────────────────────────────── -->
+  <div class="sd-section">
+    <div class="sd-section-title">Recent Transactions</div>
+    <div class="sd-table-wrap">
+      <table class="sd-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total (PKR)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="recent-orders-body">
+          <% if (stats.recentOrders.length === 0) { %>
+            <tr>
+              <td colspan="5" class="sd-empty">No orders yet — place an order through the API to see it here.</td>
+            </tr>
+          <% } else { %>
+            <% stats.recentOrders.forEach(order => { %>
+              <tr>
+                <td style="font-family:monospace;font-size:11px;color:#777;">
+                  <%= order._id.toString().slice(-8).toUpperCase() %>
+                </td>
+                <td><%= new Date(order.createdAt).toLocaleDateString('en-PK', { day:'2-digit', month:'short', year:'numeric' }) %></td>
+                <td><%= order.items.reduce((s, i) => s + i.quantity, 0) %></td>
+                <td><strong><%= order.totalPrice.toLocaleString() %></strong></td>
+                <td>
+                  <span class="sd-badge-status status-<%= order.status %>">
+                    <%= order.status %>
+                  </span>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Last-updated ticker ────────────────────────────────── -->
+  <div class="sd-ticker">
+    Last updated: <span id="last-updated"><%= new Date(stats.lastUpdated).toLocaleTimeString() %></span>
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>
+
+<!-- ════════════════════════════════════════════════════════════
+     jQuery — loaded from CDN (only on this page)
+     Polls /api/sales-data every 10 seconds and updates the DOM
+════════════════════════════════════════════════════════════ -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
+
+<script>
+$(function () {
+
+  /* ── helpers ─────────────────────────────────────────────── */
+  function fmt(n) {
+    return Number(n).toLocaleString('en-PK');
+  }
+
+  function statusClass(s) {
+    const map = { confirmed: 'status-confirmed', shipped: 'status-shipped',
+                  delivered: 'status-delivered', pending:   'status-pending',
+                  cancelled: 'status-cancelled' };
+    return map[s] || 'status-pending';
+  }
+
+  /* ── flash an element briefly to signal update ───────────── */
+  function flash($el) {
+    $el.addClass('updating');
+    setTimeout(function () { $el.removeClass('updating'); }, 400);
+  }
+
+  /* ── render the recent-orders table rows ─────────────────── */
+  function renderOrders(orders) {
+    if (!orders || orders.length === 0) {
+      $('#recent-orders-body').html(
+        '<tr><td colspan="5" class="sd-empty">No orders yet.</td></tr>'
+      );
+      return;
+    }
+    var html = '';
+    $.each(orders, function (_, o) {
+      var shortId = o._id.slice(-8).toUpperCase();
+      var date    = new Date(o.createdAt).toLocaleDateString('en-PK',
+                     { day: '2-digit', month: 'short', year: 'numeric' });
+      var units   = o.items.reduce(function (s, i) { return s + i.quantity; }, 0);
+      var sc      = statusClass(o.status);
+      html += '<tr>' +
+        '<td style="font-family:monospace;font-size:11px;color:#777;">' + shortId + '</td>' +
+        '<td>' + date + '</td>' +
+        '<td>' + units + '</td>' +
+        '<td><strong>' + fmt(o.totalPrice) + '</strong></td>' +
+        '<td><span class="sd-badge-status ' + sc + '">' + o.status + '</span></td>' +
+        '</tr>';
+    });
+    $('#recent-orders-body').html(html);
+  }
+
+  /* ── main poll function ──────────────────────────────────── */
+  function refreshStats() {
+    $.ajax({
+      url:      '/api/sales-data',
+      method:   'GET',
+      dataType: 'json',
+      success: function (data) {
+
+        /* KPI cards */
+        flash($('#stat-revenue'));
+        flash($('#stat-orders'));
+        flash($('#stat-aov'));
+        flash($('#stat-products'));
+
+        $('#stat-revenue').text('PKR ' + fmt(data.totalRevenue));
+        $('#stat-orders').text(fmt(data.totalOrders));
+        $('#stat-aov').text('PKR ' + fmt(data.avgOrderValue));
+        $('#stat-products').text(fmt(data.totalProducts));
+
+        /* Top product */
+        if (data.topProduct) {
+          $('#top-product-name').text(data.topProduct.name).css('color', '');
+          $('#top-product-units').text(fmt(data.topProduct.unitsSold));
+          $('#top-product-revenue').text(fmt(data.topProduct.revenue));
+        } else {
+          $('#top-product-name').text('No sales recorded yet').css('color', '#aaa');
+          $('#top-product-units').text('0');
+          $('#top-product-revenue').text('0');
+        }
+
+        /* Recent orders */
+        renderOrders(data.recentOrders);
+
+        /* Ticker */
+        var t = data.lastUpdated
+          ? new Date(data.lastUpdated).toLocaleTimeString()
+          : new Date().toLocaleTimeString();
+        $('#last-updated').text(t);
+      },
+      error: function (xhr, status, err) {
+        console.warn('[Sales Dashboard] Poll failed:', status, err);
+        // silently ignore — next interval will retry
+      }
+    });
+  }
+
+  /* ── start polling every 10 000 ms (10 seconds) ────────── */
+  setInterval(refreshStats, 10000);
+
+});
+</script>
